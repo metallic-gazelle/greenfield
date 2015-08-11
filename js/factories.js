@@ -38,7 +38,7 @@ angular.module('djBooth.factories', [])
           "name": item["name"],
           "artists": [],
           "album": item["album"]["name"],
-          "coverArt": item["album"]["images"],
+          "coverArt": item["album"]["images"][2]["url"],
           "duration_ms": item["duration_ms"],
           "popularity": item["popularity"],
           "preview_url": item["preview_url"],
@@ -84,7 +84,8 @@ var getQueue = function($http){
   }
 
   return {
-    addSong: addSong,
+    getQueue: getQueue,
+    addSong: addSong
   }
 
 })

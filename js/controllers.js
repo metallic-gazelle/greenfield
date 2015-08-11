@@ -73,3 +73,31 @@ angular.module('djBooth.controllers', [])
     })
     // this is where the search field updates with data from spotify as you type, obviously this is not implemented and 
     // is placeholder code
+
+    // This controller manages the spotify player widget (playing next song in queue)
+    .controller('playerController', function($scope, $window, databaseInteraction){
+      // retrieve the queue, which will be an array of objects
+      var queue = databaseInteraction.getQueue;
+
+      var currentSongIdx = 0;
+      // grab uri of first song in queue
+      if (queue.length > 0){
+        $scope.uri = queue[currentSongIdx]["uri"];
+      } else {
+        console.log("Empty Queue");
+      }
+
+      $scope.playNext = function(){
+        currentSongIdx++;
+        $scope.uri = queue[currentSongIdx]["uri"];
+        $("#widget").contents().find("div.play-pause-btn").click();
+      };
+
+
+    })
+
+
+
+
+
+

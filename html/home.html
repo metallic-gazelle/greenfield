@@ -24,7 +24,9 @@
 <body ng-controller='searchController' class=" jumbotron center-block text-center">
     <div class='container-fluid'>
         <h1>#PartyRoom</h1>
-        <iframe src="https://embed.spotify.com/?uri=spotify:track:5cZHmnsLKUweTq1KuWJAu8" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
+        <div ng-controller='playerController'>
+            <iframe src="https://embed.spotify.com/?uri=spotify:track:{{uri}}" width="300" height="80" id="widget" frameborder="0" allowtransparency="true" onended="playNext()"></iframe>
+        </div>
         <!-- <form name='searchForm' class='form-inline'>
             <input type='text' class='form-control' ng-model='song' placeHolder='Select a song' update-search="getSong(song)">
         </form>
