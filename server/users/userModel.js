@@ -1,69 +1,37 @@
 var mongoose = require('mongoose'),
-    bcrypt   = require('bcrypt-nodejs'),
-    Q        = require('q'),
-    SALT_WORK_FACTOR  = 10;
-
+    bcrypt   = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 //===========================
 // User schema
 //===========================
-var UserSchema = new Schema({
-  username: {type: String, required: true, unique: true},
-  password: {type: String, required: true},
-  salt: String,
-  name: {
-    first: String,
-    last: String,
+var userSchema = new Schema({
+  facebook: {
+      id         : String,
+      token      : String,
+      name       : String,
+      email      : String,
+      photo      : String
+  }, 
+  spotify: {
+      id         : String,
+      token      : String,
+      name       : String,
+      email      : String, 
+      photo      : String
   },
-  image: String,
   updated_at: {type: Date}
 });
 
-// method to compare usernames original password (salted + hashsed) with entered password
-UserSchema.methods.comparePasswords = function (candidatePassword) {
-  var defer = Q.defer();
-  var savedPassword = this.password;
-  bcrypt.compare(candidatePassword, savedPassword, function (err, isMatch) {
-    if (err) {
-      defer.reject(err);
-    } else {
-      defer.resolve(isMatch);
-    }
-  });
-  return defer.promise;
+// methods ======================
+// generating a hash
+userSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-// before saving any User
-//   revise updated_at field with current date
-//   update the has of the password if the password is reset or new
-UserSchema.pre('save', function (next) {
-  var user = this;
-  this.updated_at = new Date();
+// checking if password is valid
+userSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.local.password);
+};
 
-  // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) {
-    return next();
-  }
-
-  // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-    if (err) {
-      return next(err);
-    }
-
-    // hash the password along with our new salt
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) {
-        return next(err);
-      }
-
-      // override the cleartext password with the hashed one
-      user.password = hash;
-      user.salt = salt;
-      next();
-    });
-  });
-});
-
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);

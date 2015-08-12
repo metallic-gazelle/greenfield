@@ -1,7 +1,7 @@
 var User     = require('./userModel'),
     Q        = require('q'),
     jwt      = require('jwt-simple'),
-    sendResp = require('helpers').sendResponse;
+    sendResp = require('../config/helpers').sendResponse;
 
 module.exports = {
   signin: function (req, res, next) {

@@ -1,7 +1,7 @@
 var Playlist       = require('./playlistModel'),
     SongController = require('../songs/songController'),
     Q              = require('q'),
-    sendResp       = require('helpers').sendResponse;
+    sendResp       = require('../config/helpers').sendResponse;
 
 module.exports = {
 

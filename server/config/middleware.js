@@ -1,7 +1,10 @@
-var morgan      = require('morgan'), // used for logging incoming request
-    bodyParser  = require('body-parser'),
-    helpers     = require('./helpers'); // our custom middleware
-
+var morgan        = require('morgan'), // used for logging incoming request
+    bodyParser    = require('body-parser'),
+    helpers       = require('./helpers'),
+    cookieParser  = require('cookie-parser'),
+    session       = require('express-session'),
+    flash         = require('connect-flash'),
+    passport      = require('passport');
 // TODO: will need to change much of the authentication and helpers.decode which uses jwt
 
 module.exports = function (app, express) {
@@ -11,8 +14,16 @@ module.exports = function (app, express) {
   var playlistRouter = express.Router();
 
   app.use(morgan('dev'));
+  app.use(cookieParser()); // read cookies (needed for auth)
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
+
+  app.set('view engine', 'ejs'); // set up ejs for templating
+  app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+  app.use(passport.initialize());
+  app.use(passport.session()); // persistent login sessions
+  app.use(flash()); // use connect-flash for flash messages stored in session
+
 
   // TODO: CHANGE DIR TO SERVE UP PUBLIC FILES
   app.use(express.static(__dirname + '/../../client'));
@@ -32,4 +43,5 @@ module.exports = function (app, express) {
   require('../users/userRoutes')(userRouter);
   require('../songs/songRoutes')(songRouter);
   require('../playlists/playlistRoutes')(playlistRouter);
+  require('./auth-routes')(app, passport);
 };
