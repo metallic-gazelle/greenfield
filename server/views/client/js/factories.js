@@ -19,30 +19,29 @@ angular.module('djBooth.factories', [])
 
             return $http({
                     method: 'GET',
-                    url: uri,
-                    Accept: "application/json"
+                    url: 'https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&q=' + searchQuery
+                                                                                        +'&type=video'
+                                                                                        +'&videoEmbeddable=true'
+                                                                                        +'&videoCaption=closedCaption'
+                                                                                        +'&key=AIzaSyCozCGD6I5g-mOcT7xL8KCQ97GUlCIMj3w',
+                    
                 })
                 .then(function(resp) {
-                    var searchResults = resp.data;
+                    console.log(resp)
+                    var searchResults = resp.data.items;
 
                     // Limit = # of search results per page, returned from spotify
-                    var limit = searchResults["tracks"]["limit"];
+                    // var limit = searchResults["tracks"]["limit"];
                     // Array of track objects from search
-                    var items = searchResults["tracks"]["items"];
+                    // var items = searchResults["tracks"]["items"];
 
                     var results = [];
 
                     // Iterate through search results, 
-                    _.each(items, function(item) {
+                    _.each(searchResults, function(item) {
                         var entry = {
-                            "name": item["name"],
-                            "artists": [],
-                            "album": item["album"]["name"],
-                            "coverArt": item["album"]["images"][2]["url"],
-                            "duration_ms": item["duration_ms"],
-                            "popularity": item["popularity"],
-                            "preview_url": item["preview_url"],
-                            "uri": item["uri"]
+                            "title": item.snippet.title,
+                            "uri": item.id.videoId
                         };
                         _.each(item["artists"], function(artist) {
                             entry["artists"].push(artist["name"]);

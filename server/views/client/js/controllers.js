@@ -1,4 +1,13 @@
-angular.module('djBooth.controllers', [])
+angular.module('djBooth.controllers', ['ngSanitize'])
+
+  .config(['$sceDelegateProvider', function($sceDelegateProvider){
+    // Whitelist spotify uri's
+    $sceDelegateProvider.resourceUrlWhitelist([
+      'self',
+      'https://www.googleapis.com/youtube/v3/search?part=snippet&q=**',
+      'http://www.youtube.com/embed/**'
+    ]);
+  }])
     // controller for handling the search function
 
 .controller('searchController', function($scope, $window, searchSpotify) {
@@ -12,6 +21,7 @@ angular.module('djBooth.controllers', [])
 
         $scope.getSongs = function(reqString) {
             searchSpotify.getData(reqString).then(function(data) {
+                    console.log(data)
                     $scope.results = data;
                 })
                 .catch(function(err) {
@@ -31,22 +41,30 @@ angular.module('djBooth.controllers', [])
 
     })
     .controller('playListController', function($scope, $window, $location, playlistDatabase) {
-        $scope.playList = [];
+        $scope.playing = [{title: "Katy Perry - Unconditionally (Official)", uri: "XjwZAa2EjKA", $$hashKey: "object:22", votes: 0}];
+        $scope.current = 'http://www.youtube.com/embed/' + $scope.playing[0].uri +'?autoplay=1'
         $scope.selectSong = function(song) {
             song.votes = 0;
-            playlistDatabase.addSong(song).then(function(data) {
-                    $scope.playList = playlistDatabase.getQueue();
-                })
-                .catch(function(err) {
-                    console.error(err)
-                })
+            console.log(song)
+            $scope.playing.push(song);
+            console.log($scope.playing[0].uri)
+            $scope.current = 'http://www.youtube.com/embed/' + song.uri+ '?autoplay=1'
+            console.log($scope.current);
+            var iframe = document.getElementById('theIframe')
+            iframe.src = 'http://www.youtube.com/embed/' + song.uri+ '?autoplay=1'
+            // playlistDatabase.addSong(song).then(function(data) {
+            //         $scope.playList = playlistDatabase.getQueue();
+            //     })
+            //     .catch(function(err) {
+            //         console.error(err)
+            //     })
         }
 
-        $scope.newQueue = function(reqData){
-            playlistDatabase.createQueue(reqData).then(function(data){                
+        $scope.newQueue = function(reqData) {
+            playlistDatabase.createQueue(reqData).then(function(data) {
                 console.log(data.data);
                 // $location.path('/host')
-            
+
             })
         }
 
@@ -78,8 +96,8 @@ angular.module('djBooth.controllers', [])
     //         })
     //     }
     // });
-// this is where the search field updates with data from spotify as you type, obviously this is not implemented and 
-// is placeholder code
+    // this is where the search field updates with data from spotify as you type, obviously this is not implemented and 
+    // is placeholder code
 
 // This controller manages the spotify player widget (playing next song in queue)
 // .controller('playerController', function($scope, $window, databaseInteraction){
