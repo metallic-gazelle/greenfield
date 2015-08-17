@@ -1,5 +1,7 @@
 node_modules/
 bower_components/
+bower.json
+package.json
 *.log
 
 build/

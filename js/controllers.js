@@ -1,36 +1,14 @@
-angular.module('djBooth.controllers', [])
-    // controller for handling the search function
+angular.module('djBooth.controllers', ['ngSanitize', 'djBooth.factories'])
+  .config(['$sceDelegateProvider', function($sceDelegateProvider){
+    // Whitelist spotify uri's
+    $sceDelegateProvider.resourceUrlWhitelist([
+      'self',
+      'https://embed.spotify.com/?uri=spotify:track:**',
+      'https://embed.spotify.com/?uri=spotify:trackset:**'
+    ]);
+  }])
+  // controller for handling the search function
 
-    .filter('propsFilter', function() {
-  return function(items, props) {
-    var out = [];
-
-    if (angular.isArray(items)) {
-      items.forEach(function(item) {
-        var itemMatches = false;
-
-        var keys = Object.keys(props);
-        for (var i = 0; i < keys.length; i++) {
-          var prop = keys[i];
-          var text = props[prop].toLowerCase();
-          if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-            itemMatches = true;
-            break;
-          }
-        }
-
-        if (itemMatches) {
-          out.push(item);
-        }
-      });
-    } else {
-      // Let the output be the input untouched
-      out = items;
-    }
-
-    return out;
-  }
-})
     .controller('searchController', function($scope, $window, searchSpotify) {
 
         // the results array that houses the songs currently in the queue
@@ -77,22 +55,14 @@ angular.module('djBooth.controllers', [])
     // This controller manages the spotify player widget (playing next song in queue)
     .controller('playerController', function($scope, $window, databaseInteraction){
       // retrieve the queue, which will be an array of objects
-      var queue = databaseInteraction.getQueue;
+      var nextSong = databaseInteraction.getNext();
+      
 
-      var currentSongIdx = 0;
-      // grab uri of first song in queue
-      if (queue.length > 0){
-        $scope.uri = queue[currentSongIdx]["uri"];
-      } else {
-        console.log("Empty Queue");
-      }
+      $scope.uri = nextSong
 
       $scope.playNext = function(){
-        currentSongIdx++;
-        $scope.uri = queue[currentSongIdx]["uri"];
-        $("#widget").contents().find("div.play-pause-btn").click();
-      };
-
+        
+      }
 
     })
 

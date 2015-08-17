@@ -35,14 +35,14 @@ angular.module('djBooth.factories', [])
       // Iterate through search results, 
       _.each(items, function(item){
         var entry = {
-          "name": item["name"],
+          "song_name": item["name"],
           "artists": [],
-          "album": item["album"]["name"],
-          "coverArt": item["album"]["images"][2]["url"],
+          "album_name": item["album"]["name"],
+          "image": item["album"]["images"][2]["url"],
           "duration_ms": item["duration_ms"],
           "popularity": item["popularity"],
           "preview_url": item["preview_url"],
-          "uri": item["uri"]
+          "spotifyId": item["uri"]
         };
         _.each(item["artists"], function(artist){
           entry["artists"].push(artist["name"]);
@@ -61,31 +61,50 @@ angular.module('djBooth.factories', [])
 })
 .factory('databaseInteraction', function($http){
 
-// this is our get request for our db for the current playlist in the room
-// this will be called when a user loads the room and whenever a succesful post request occurs to the db (so 
-// the user can see the updated playlist when after they add somethng to it)
-var getQueue = function($http){
-  return $http({
-    method: 'GET',
-    url: 'OUR DB'
-  })
-  .then(function(resp){
-    return resp.data
-  })
-}
-
-// this is the post request for adding songs to our db and essentially the queue this is placeholder code
-  var addSong = function(songData){
-      return $http({
-      method: 'POST',
-      url: 'OUR DB',
-      data: songData
+  // this is our get request to our db for the event's playlist
+  var getPlaylist = function(playlistId){
+    var uri = '/' + playlistId;
+    return $http({
+      method: 'GET',
+      url: uri
     })
-  }
+    .then(function(resp){
+      console.log("Got playlist data: ", resp.data);
+      return resp.data.songs;
+    })
+  };
+
+  // this is the post request for adding songs to our db
+  var addSong = function(playlistId, song){
+    var uri = '/add/' + playlistId + '/' + song.uri;
+    return $http({
+      method: 'POST',
+      url: uri,
+      data: song
+    })
+  };
+
+  // this function retrieve the next song in the db and
+  // then removes from songs --> sends to played
+  var getNext = function(playlistId){
+    var songs = getPlaylist(playlistId);
+    var nextUri = songs[0].uri;
+    var uri = '/remove/' + playlistId + '/' + nextUri;
+    return $http({
+      method: 'POST',
+      url: uri
+    })
+    .then(function(resp){
+      $('#player').attr('src', 'http://www.youtube.com/embed/' + resp.data.uri);
+      return resp.data;
+    })
+  };
+
 
   return {
-    getQueue: getQueue,
-    addSong: addSong
+    getPlaylist: getPlaylist,
+    addSong: addSong,
+    getNext: getNext
   }
 
 })
