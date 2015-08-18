@@ -9,12 +9,16 @@ angular.module('jibe', [
 
 .config(function($httpProvider, $stateProvider, $urlRouterProvider) {
 
-        $urlRouterProvider.otherwise('/home');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
+            .state('login', {
+                templateUrl: 'app/login/login.html',
+                url: ''
+            })
             .state('home', {
                 templateUrl: 'app/home/home.html',
-                url: ''
+                url: '/home'
             })
             .state('host', {
                 templateUrl: 'app/host/host.html',

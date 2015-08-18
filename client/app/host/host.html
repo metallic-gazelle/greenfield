@@ -1,6 +1,5 @@
 <div id="overlay-source-search" class="overlay">
 
-
    <a href="#" id='search-close' class="collapse-button">
         <i class="fa fa-minus"></i>
     </a>
@@ -8,23 +7,19 @@
    <div id="source-name">YouTube</div>
    
    <div id="search-form">
-     <!--   <input type="text" class="input_text light" placeholder="Search Now">
-       <input type="submit" class="input_submit dark-button black" value="GO"> -->
-                <ui-select ng-model='result.selected'  on-select='selectSong(result.selected)'  theme="bootstrap" ng-disabled="false" reset-search-input="false" uiSelectConfig.appendToBody = true; style="width: 300px;">
-           <ui-select-match placeholder="Enter a song...">{{$select.selected.song_name}}</ui-select-match>
-           <ui-select-choices repeat="result in results |limitTo:10" refresh="getSongs($select.search)" refresh-delay="0">
-               <div ng-bind-html="result.title|highlight: $select.search"></div>
-           </ui-select-choices>
-       </ui-select>
 
+       <input type="text" class="input_text light" placeholder="Search Now" ng-model='searchInput' ng-change="getSongs(searchInput)">
+
+       <input type="submit" class="input_submit dark-button black" value="GO" ng-click="getSongs(searchInput)">
    </div>
 
-<!--    <div class="overlay-content">
-       <div class="song-container clearfix">
-           <img class="small-artwork" src="assets/img/now-playing-img.jpg">
+   <div class="overlay-content">
+       <div class="song-container clearfix" ng-show="searchInput!== ''" ng-repeat="result in results |limitTo:20" refresh="getSongs($select.search)" refresh-delay="0">
+           <img class="small-artwork" src="http://i1.ytimg.com/vi/{{result.uri}}/1.jpg ">
            <div class="song-info">
-               <div class="song-name light medium">Haunted By a really long song name</div>
-               <div class="artist-name light small">Beyonce and the super groovy chicks</div>
+
+               <div class="song-name light medium">{{ result.title }}</div>
+               <!-- <div class="artist-name light small">Beyonce and the super groovy chicks</div> -->
            </div>
            <a href="" class="add-button dark-button black">
                Add
@@ -32,28 +27,8 @@
 
        </div>
 
-       <div class="song-container clearfix">
-           <img class="small-artwork" src="assets/img/now-playing-img.jpg">
-           <div class="song-info">
-               <div class="song-name light medium">Haunted</div>
-               <div class="artist-name light small">Beyonce</div>
-           </div>
-           <a href="" class="add-button dark-button">
-               Add
-           </a>
-       </div>
 
-       <div class="song-container clearfix">
-           <img class="small-artwork" src="assets/img/now-playing-img.jpg">
-           <div class="song-info">
-               <div class="song-name light medium">Haunted</div>
-               <div class="artist-name light small">Beyonce</div>
-           </div>
-           <a href="" class="add-button dark-button">
-               Add
-           </a>
-       </div>
-   </div> -->
+   </div>
 
 </div>
 
@@ -97,8 +72,6 @@
 <div class="now-playing-header">
     <span class="now-playing-title black">Now Playing</span>
 </div>
-
-
 
 <!-- ng-controller='PlaylistCtrl' -->
 <div class="now-playing-container">
