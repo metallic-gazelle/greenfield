@@ -1,7 +1,11 @@
 <div class='container-fluid'>
     <h1>#PartyRoom</h1>
-    <div >
-        <iframe src="https://embed.spotify.com/?uri=spotify:track:4th1RQAelzqgY7wL53UGQt" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
+    <div>
+        <div id="player" ng-controller='playListController'></div>
+        <div ng-controller="YouTubeCtrl">
+            <youtube width="{{yt.width}}" height="{{yt.height}}" videoid="{{yt.videoid}}"></youtube>
+            <button ng-click='newVideo()'>test</button>
+        </div>
     </div>
     <!-- <form name='searchForm' class='form-inline'>
         <input type='text' class='form-control' ng-model='song' placeHolder='Select a song' update-search="getSong(song)">
