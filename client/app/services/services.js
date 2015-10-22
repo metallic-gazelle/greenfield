@@ -179,7 +179,7 @@ angular.module('jibe.services', [])
   };
 
   authService.isAuth = function () {
-    var verdict = !!$window.localStorage.getItem('com.beer-tab-fb') || !!$window.localStorage.getItem('com.beer-tab');
+    var verdict = !!$window.localStorage.getItem('com.jibe-fb') || !!$window.localStorage.getItem('com.jibe');
     return verdict;
   };
 
@@ -217,17 +217,22 @@ angular.module('jibe.services', [])
       var deferred = $q.defer();
 
       var newUser = {username: null, name:{}, token: null};
+      var newUser = {
+        id         : null,
+        token      : null,
+        name       : null,
+        email      : null,
+        photo      : null
+      };
+
       // query FB api -->
         // userId will be used as username
         // split name to get First & Last
-      FB.api('/me', { locale: 'en_US', fields: 'name, email, picture', width: 150, height: 150 }, function(resp){
+      FB.api('/me', { locale: 'en_US', fields: 'name, email, picture'}, function(resp){
         console.log("RESPONSE --------->", resp);
-        newUser['username'] = resp.id;
-        var full_name = resp.name;
-        var split = full_name.split(" ");
-        newUser['name']['first'] = split[0];
+        newUser['id'] = resp.id;
+        newUser['name'] = resp.name;
         newUser['photo'] = resp.picture.data.url;
-        newUser['name']['last']  = split[split.length-1];
       });
       FB.getLoginStatus(function(resp){
         var token = resp.authResponse.accessToken;

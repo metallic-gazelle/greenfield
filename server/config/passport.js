@@ -42,7 +42,7 @@ module.exports = function(passport) {
 
     // rdio will send back the token and profile
     function(req, token, refreshToken, profile, done) {
-      console.log("RDIO REQUEST ---------> ", req);
+      //console.log("RDIO REQUEST ---------> ", req);
       // asynchronous
       if (!req.user) {
         process.nextTick(function() {
@@ -57,8 +57,11 @@ module.exports = function(passport) {
 
               // if the user is found, then log them in
               if (user) {
+                  console.log("\n /////////////////////////////////////////////////// FOUND USER /////////////////////////////////////////////////// \n");
                   return done(null, user); // user found, return that user
                 } else {
+                  console.log("\n /////////////////////////////////////////////////// DIDNT FIND USER /////////////////////////////////////////////////// \n");
+
                   // if there is no user found with that rdio id, create them
                   var newUser            = new User();
 
@@ -83,6 +86,8 @@ module.exports = function(passport) {
         });
 
       } else {
+        console.log("\n /////////////////////////////////////////////////// USER LOGGED IN /////////////////////////////////////////////////// \n");
+
         // user already exists and is logged in, we have to link accounts
         var user            = req.user; // pull the user out of the session
 
@@ -91,7 +96,7 @@ module.exports = function(passport) {
         user.rdio.token = token;
         user.rdio.name  = profile.displayName;
         user.rdio.email = profile._json.email;
-        //user.rdio.photo = profile.photos[0];
+        user.rdio.photo = profile._json.result.icon250;
 
         // save the user
         user.save(function(err) {

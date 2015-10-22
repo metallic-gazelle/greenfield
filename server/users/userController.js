@@ -50,38 +50,25 @@ module.exports = {
 
   login: function (req, res, next) {
     console.log("--------> REQ BODY: \n", req.body);
-   /* var username = req.body.username;
-    var password = req.body.password;*/
 
-    /*if (!!req.body.token){
+    if (!!req.body.token){
       var fbToken = req.body.token;
-      var displayname = req.body.name['first'];
+      var displayname = req.body.name;
       delete req.body.token;
     }
 
     // If FB token is present, don't try to validate password
-    User.findOne({ username: username })
+    User.findOne({ 'facebook.id': req.body.id })
     .exec(function (err, user) {
       if (!user) {
         res.status(401).end("Username Not Found");
-      } else if (!!fbToken) {
-        res.json({token: fbToken, fb: true, username: username, displayname: displayname});
-        console.log("Logged In With Facebook");
-        res.status(201).end();
       } else {
-        user.comparePassword(password, user.password, function (err, match) {
-          if (match) {
-            var token = jwt.encode(user, 'argleDavidBargleRosson');
-            res.json({token: token});
-            console.log('Success: Logged in');
-            res.status(200).end();
-
-          } else {
-            res.status(401).end("Incorrect Password: Try Again");
-          }
-        });
+        console.log("THIS IS THE USER -----> ", user);
+        res.json(201, {token: fbToken, fb: true, id: req.body.id, displayname: req.body.name});
+        //res.status(201).end();
+        console.log("Logged In With Facebook");
       }
-    });*/
+    });
   }
 
 };
