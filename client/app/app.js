@@ -3,7 +3,6 @@ var app = angular.module('jibe', [
     'jibe.services',
     'jibe.auth',
     'jibe.host',
-    'ngSanitize',
     'ui.select',
     'ui.router'
 ]);
@@ -26,17 +25,6 @@ app.config(function($httpProvider, $stateProvider, $urlRouterProvider) {
       templateUrl: 'app/host/host.html',
       url: '/host/:playlistId',
       controller: 'PlaylistCtrl'
-    })
-    .state('guest', {
-      templateUrl: 'app/playlist/playlist.html',
-      url: '/playlist/:playlistId',
-      controller: 'PlaylistCtrl'
-    })
-    // nested list with custom controller
-    .state('.search', {
-      parent: 'guest',
-      url: '/search',
-      templateUrl: 'app/playlist/playlist-search.html',
     });
 
     $httpProvider.interceptors.push('AttachTokens');
@@ -47,12 +35,9 @@ app.factory('AttachTokens', function ($window) {
   // the kind found to the request headers
   var attach = {
     request: function (object) {
-      var jwt = $window.localStorage.getItem('com.jibe');
       var fbToken = $window.localStorage.getItem('com.jibe-fb');
       if (!!fbToken) {
         object.headers['x-access-token'] = fbToken;
-      } else {
-        object.headers['x-access-token'] = jwt;
       }
       object.headers['Allow-Control-Allow-Origin'] = '*';
       return object;
@@ -62,7 +47,7 @@ app.factory('AttachTokens', function ($window) {
 });
 
 // RUN service that authenticates all changes to url path
-app.run(function ($rootScope, $location, $window, AuthService, fbAuthService) {
+app.run(function ($rootScope, $location, $window, fbAuthService) {
 
   // Initialize Facebook JS SDK (Will be called once loaded below)
   $window.fbAsyncInit = function() {
@@ -86,7 +71,7 @@ app.run(function ($rootScope, $location, $window, AuthService, fbAuthService) {
 
   // Authenticate Changes to URL Path
   $rootScope.$on('$stateChangeStart', function (evt, next, current) {
-    if (next.templateUrl !== 'app/auth/signup.html' && !AuthService.isAuth()) {
+    if (!fbAuthService.isAuth()) {
       $location.path('/login');
     }
   });

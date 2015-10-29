@@ -1,6 +1,0 @@
-<ui-select ng-model='result.selected' on-select='selectSong(result.selected)'  theme="bootstrap" ng-disabled="false" reset-search-input="false" uiSelectConfig.appendToBody = true; style="width: 300px;">
-    <ui-select-match placeholder="Enter a song...">{{$select.selected.name}}</ui-select-match>
-    <ui-select-choices repeat="result in results |limitTo:10" refresh="getSongs($select.search)" refresh-delay="0" >
-        <div ng-bind-html="result.name + '  -' +result.artists[0] |highlight: $select.search"></div>
-    </ui-select-choices>
-</ui-select>
