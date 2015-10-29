@@ -12,12 +12,12 @@ var userSchema = new Schema({
       name       : String,
       email      : String,
       photo      : String
-  }, 
-  spotify: {
+  },
+  rdio: {
       id         : String,
       token      : String,
       name       : String,
-      email      : String, 
+      email      : String,
       photo      : String
   },
   updated_at: {type: Date}

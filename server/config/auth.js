@@ -2,16 +2,16 @@
 module.exports = {
 
     'facebookAuth' : {
-        'clientID'      : '', // your App ID
-        'clientSecret'  : '', // your App Secret
+        'clientID'      : '1069113223099244', // your App ID
+        'clientSecret'  : 'e260cca5173a2a1916d0b9443c2eea29', // your App Secret
         'callbackURL'   : 'http://localhost:8080/auth/facebook/callback',
-        'profileFields' : ['id', 'name', 'displayName', 'photos', 'email', 'hometown', 'profileUrl', 'friends']
+        'profileFields' : ['id', 'name', 'displayName', 'photos', 'email']
 
     },
-    'spotifyAuth' : {
-        'clientID'      : '', // your App ID
-        'clientSecret'  : '', // your App Secret
-        'callbackURL'   : 'http://localhost:8080/auth/spotify/callback'
+    'rdioAuth' : {
+        'consumerKey'      : '2dedtdnhuvds3lgoxraqsckege', // your App ID
+        'consumerSecret'  : 'x6j5yXrpTt7SyhejdUai0A', // your App Secret
+        'callbackURL'   : 'http://localhost:8080/auth/rdio/callback'
 
     }
 

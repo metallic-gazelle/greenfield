@@ -2,55 +2,19 @@ var PlaylistCtrl = require('../playlists/playlistController');
 
 module.exports = function(app, passport) {
 
-    // route for home page
-    app.get('/', function(req, res) {
-        res.render('../views/index.ejs'); // load the index.ejs file
-    });
-   
-
-    // route for login form
-    // route for processing the login form
-    // route for signup form
-    // route for processing the signup form
-
-    // route for showing the profile page
-    app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('../views/profile.ejs', {
-            user : req.user // get the user out of session and pass to template
-        });
-    });
-
-    app.get('/home', isLoggedIn, function(req, res) {
-        res.render('../views/home.ejs', {
-            user : req.user // get the user out of session and pass to template
-        });
-    });
     app.get('/host', isLoggedIn, PlaylistCtrl.createPlaylist, function(req, res) {
         res.redirect(301, '/#/host/' + req.playlistId);
     });
 
     // =====================================
-    // FACEBOOK ROUTES =====================
+    // RDIO ROUTES==== =====================
     // =====================================
-    // route for facebook authentication and login
-    app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+    // route for rdio authentication and login
+    app.get('/auth/rdio', passport.authenticate('rdio'));
 
     // handle the callback after facebook has authenticated the user
-    app.get('/auth/facebook/callback',
-        passport.authenticate('facebook', {
-            successRedirect : '/home',
-            failureRedirect : '/'
-        }));
-
-    // =====================================
-    // SPOTIFY ROUTES =====================
-    // =====================================
-    // route for spotify authentication and login
-    app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }));
-
-    // handle the callback after facebook has authenticated the user
-    app.get('/auth/spotify/callback',
-        passport.authenticate('spotify', {
+    app.get('/auth/rdio/callback',
+        passport.authenticate('rdio', {
             successRedirect : '/host',
             failureRedirect : '/'
         }));
@@ -61,29 +25,6 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    // =============================================================================
-    // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
-    // =============================================================================
-
-    // send to facebook to do the authentication
-    app.get('/connect/facebook', passport.authorize('facebook', { scope : 'email' }));
-
-    // handle the callback after facebook has authorized the user
-    app.get('/connect/facebook/callback',
-        passport.authorize('facebook', {
-            successRedirect : '/profile',
-            failureRedirect : '/'
-        }));
-
-    // send to facebook to do the authentication
-    app.get('/connect/spotify', passport.authorize('spotify', { scope : ['user-read-email', 'user-read-private'] }));
-
-    // handle the callback after facebook has authorized the user
-    app.get('/connect/spotify/callback',
-        passport.authorize('spotify', {
-            successRedirect : '/profile',
-            failureRedirect : '/'
-        }));
 
     // =============================================================================
     // UNLINK ACCOUNTS =============================================================
@@ -101,10 +42,10 @@ module.exports = function(app, passport) {
             });
         });
 
-        // spotify -------------------------------
-        app.get('/unlink/spotify', function(req, res) {
-            var user            = req.user;
-            user.spotify = undefined;
+        // rdio -------------------------------
+        app.get('/unlink/rdio', function(req, res) {
+            var user = req.user;
+            user.rdio = undefined;
             user.save(function(err) {
                 res.redirect('/profile');
             });
