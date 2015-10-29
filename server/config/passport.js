@@ -55,6 +55,7 @@ module.exports = function(passport) {
               if (err)
                 return done(err);
 
+
               // if the user is found, then log them in
               if (user) {
                   console.log("\n /////////////////////////////////////////////////// FOUND USER /////////////////////////////////////////////////// \n");
