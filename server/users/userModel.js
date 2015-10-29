@@ -13,7 +13,7 @@ var userSchema = new Schema({
       email      : String,
       photo      : String
   }, 
-  spotify: {
+  rdio: {
       id         : String,
       token      : String,
       name       : String,

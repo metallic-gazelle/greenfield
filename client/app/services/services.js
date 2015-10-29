@@ -10,13 +10,13 @@ angular.module('jibe.services', [])
         var searchQuery = searchTerms.join("+");
 
         // Base url plus search query start, search query will be added on to this
-        var base_url = "https://api.spotify.com/v1/search?q=";
+        //var base_url = "https://api.spotify.com/v1/search?q=";
         // Since we will always be using the same type filter, market filter, and
         // search result limit, can combine all into one suffix url
-        var url_suffix = "&type=track&market=US&limit=10";
+        var url_suffix = "&type=track&market=US&limit=20";
 
         // Combine base, search, and suffix into complete search query url
-        var uri = base_url + searchQuery + url_suffix;
+        /*var uri = base_url + searchQuery + url_suffix;*/
 
         return $http({
                 method: 'GET',
@@ -154,4 +154,114 @@ angular.module('jibe.services', [])
         downVote: downVote,
         upVote: upVote
     };
+})
+.factory('AuthService', function ($http, $location, $window) {
+  var authService = {};
+
+  authService.login = function (credentials) {
+    return $http
+      .post('/api/users/login', credentials)
+      .then(function (resp) {
+        return resp.data.token;
+      })
+      .catch(function (error) {
+        throw error;
+      });
+  };
+
+  authService.signup = function (credentials) {
+    console.log('cred:', credentials);
+    return $http
+      .post('/api/users/signup', credentials)
+      .then(function (resp) {
+        return resp.data.token;
+      });
+  };
+
+  authService.isAuth = function () {
+    var verdict = !!$window.localStorage.getItem('com.beer-tab-fb') || !!$window.localStorage.getItem('com.beer-tab');
+    return verdict;
+  };
+
+  authService.signout = function () {
+    // Remove tokens from local storage, redirect to login, reload page
+    $window.localStorage.removeItem('com.beer-tab');
+    $window.localStorage.removeItem('com.beer-tab-fb');
+    $location.path('/login');
+    setTimeout(function(){$window.location.reload()}, 500);
+  };
+
+  return authService;
+})
+
+// Factory to handle FB authentication
+.factory('fbAuthService', function ($rootScope, $q, $http, $location, $window) {
+  var fbAuthService = {};
+
+  // Service that handles login/signup via facebook
+  fbAuthService.useFacebook = function(path, cb){
+
+    //return a promise that handles FB login
+    var asyncLogin = function() {
+      var deferred = $q.defer();
+
+      FB.login(function(res){
+        deferred.resolve(res);
+      }, {scope: 'public_profile, email'});
+
+      return deferred.promise;
+    };
+
+    //return a promise that gets user info & token
+    var asyncGetUserInfo = function() {
+      var deferred = $q.defer();
+
+      var newUser = {username: null, name:{}, token: null};
+      // query FB api -->
+        // userId will be used as username
+        // split name to get First & Last
+      FB.api('/me', { locale: 'en_US', fields: 'name, email, picture', width: 150, height: 150 }, function(resp){
+        console.log("RESPONSE --------->", resp);
+        newUser['username'] = resp.id;
+        var full_name = resp.name;
+        var split = full_name.split(" ");
+        newUser['name']['first'] = split[0];
+        newUser['photo'] = resp.picture.data.url;
+        newUser['name']['last']  = split[split.length-1];
+      });
+      FB.getLoginStatus(function(resp){
+        var token = resp.authResponse.accessToken;
+        newUser['token'] = token;
+        deferred.resolve(newUser);
+      });
+
+      return deferred.promise;
+    };
+    // login async
+    asyncLogin()
+      .then(function(){
+        // get user info
+        asyncGetUserInfo()
+        // post request to our api to save user to db
+        .then(function(newUser){
+          return $http
+            .post(path, newUser)
+            .then(function (resp) {
+              console.log("http resp: ", resp);
+              cb(resp.data);
+              return resp.data;
+            });
+        })
+      });
+
+  };
+
+  // Allow the user to logout of FBook from our site?
+  fbAuthService.logout = function(){
+    FB.logout(function(response) {
+      console.log(response);
+    });
+  };
+
+  return fbAuthService;
 });
