@@ -15,7 +15,6 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-      console.log("\n /////////////////////////////////////////////////// \n", user, "\n /////////////////////////////////////////////////// \n");
       done(null, user._id);
 
     });
@@ -25,7 +24,6 @@ module.exports = function(passport) {
       User.findById(id, function(err, user) {
         done(err, user);
       });
-      //done();
     });
 
     // =========================================================================
@@ -58,10 +56,8 @@ module.exports = function(passport) {
 
               // if the user is found, then log them in
               if (user) {
-                  console.log("\n /////////////////////////////////////////////////// FOUND USER /////////////////////////////////////////////////// \n");
                   return done(null, user); // user found, return that user
                 } else {
-                  console.log("\n /////////////////////////////////////////////////// DIDNT FIND USER /////////////////////////////////////////////////// \n");
 
                   // if there is no user found with that rdio id, create them
                   var newUser            = new User();
@@ -87,7 +83,6 @@ module.exports = function(passport) {
         });
 
       } else {
-        console.log("\n /////////////////////////////////////////////////// USER LOGGED IN /////////////////////////////////////////////////// \n");
 
         // user already exists and is logged in, we have to link accounts
         var user            = req.user; // pull the user out of the session

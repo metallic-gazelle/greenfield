@@ -92,40 +92,7 @@ angular.module('jibe.services', [])
     };
 
 })
-// this is not needed due to the usage of facebook auth
-// .factory('userDatabase', function($http) {
-//     var signIn = function(userData) {
-//         return $http({
-//             method: 'POST',
-//             url: '/api/user/signin',
-//             data: userData
-//         })
-//     }
-//     var signUp = function(userData) {
-//         return $http({
-//             method: 'POST',
-//             url: '/api/user/signup',
-//             data: userData
-//         })
-//     }
-//     var signedIn = function() {
-//         return $http({
-//                 method: 'GET',
-//                 url: 'api/user/signedin'
-//             })
-//             .then(function(resp) {
-//                 return resp.data
-//             })
-//     }
 
-//     return {
-//         signIn: signIn,
-//         signUp: signUp,
-//         signedIn: signedIn
-//     }
-
-
-// })
 .factory('songDatabase', function($http) {
     var upVote = function(songId) {
         return $http({
@@ -155,44 +122,6 @@ angular.module('jibe.services', [])
         upVote: upVote
     };
 })
-.factory('AuthService', function ($http, $location, $window) {
-  var authService = {};
-
-  authService.login = function (credentials) {
-    return $http
-      .post('/api/users/login', credentials)
-      .then(function (resp) {
-        return resp.data.token;
-      })
-      .catch(function (error) {
-        throw error;
-      });
-  };
-
-  authService.signup = function (credentials) {
-    console.log('cred:', credentials);
-    return $http
-      .post('/api/users/signup', credentials)
-      .then(function (resp) {
-        return resp.data.token;
-      });
-  };
-
-  authService.isAuth = function () {
-    var verdict = !!$window.localStorage.getItem('com.jibe-fb') || !!$window.localStorage.getItem('com.jibe');
-    return verdict;
-  };
-
-  authService.signout = function () {
-    // Remove tokens from local storage, redirect to login, reload page
-    $window.localStorage.removeItem('com.beer-tab');
-    $window.localStorage.removeItem('com.beer-tab-fb');
-    $location.path('/login');
-    setTimeout(function(){$window.location.reload()}, 500);
-  };
-
-  return authService;
-})
 
 // Factory to handle FB authentication
 .factory('fbAuthService', function ($rootScope, $q, $http, $location, $window) {
@@ -216,7 +145,6 @@ angular.module('jibe.services', [])
     var asyncGetUserInfo = function() {
       var deferred = $q.defer();
 
-      var newUser = {username: null, name:{}, token: null};
       var newUser = {
         id         : null,
         token      : null,
@@ -234,6 +162,7 @@ angular.module('jibe.services', [])
         newUser['name'] = resp.name;
         newUser['photo'] = resp.picture.data.url;
       });
+
       FB.getLoginStatus(function(resp){
         var token = resp.authResponse.accessToken;
         newUser['token'] = token;
@@ -242,6 +171,7 @@ angular.module('jibe.services', [])
 
       return deferred.promise;
     };
+
     // login async
     asyncLogin()
       .then(function(){
@@ -266,6 +196,11 @@ angular.module('jibe.services', [])
     FB.logout(function(response) {
       console.log(response);
     });
+  };
+
+  fbAuthService.isAuth = function () {
+    var verdict = !!$window.localStorage.getItem('com.jibe-fb');
+    return verdict;
   };
 
   return fbAuthService;

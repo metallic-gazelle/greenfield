@@ -33,26 +33,14 @@ module.exports = function(app, passport) {
     // for local account, remove email and password
     // user account will stay active in case they want to reconnect in the future
 
-        // facebook -------------------------------
-        app.get('/unlink/facebook', function(req, res) {
-            var user            = req.user;
-            user.facebook = undefined;
-            user.save(function(err) {
-                res.redirect('/profile');
-            });
+    // rdio -------------------------------
+    app.get('/unlink/rdio', function(req, res) {
+        var user = req.user;
+        user.rdio = undefined;
+        user.save(function(err) {
+            res.redirect('/profile');
         });
-
-        // rdio -------------------------------
-        app.get('/unlink/rdio', function(req, res) {
-            var user = req.user;
-            user.rdio = undefined;
-            user.save(function(err) {
-                res.redirect('/profile');
-            });
-        });
-
-
-
+    });
 };
 
 // route middleware to make sure a user is logged in
