@@ -26,30 +26,13 @@ auth.controller('AuthCtrl', function ($scope, $rootScope, $window, $location, fb
 
     waitForLogin()
       // After login, store token we get back in localStorage
-      .then(function (token){
-        console.log("Response from backend: ", token);
-        $window.localStorage.setItem('com.jibe-fb', JSON.stringify(token));
+      .then(function (userObj){
+        console.log("Response from backend: ", userObj);
+        $window.localStorage.setItem('com.jibe-fb', JSON.stringify(userObj));
         $location.path('/home');
       });
   };
 
-  $scope.fbSignUp = function() {
-    // Return a promise that waits for signup process to complete
-    var waitForSignup = function() {
-      var deferred = $q.defer();
-      fbAuthService.useFacebook('/api/users/signup', function(resp){
-        deferred.resolve(resp);
-      });
-      return deferred.promise;
-    };
-    waitForSignup()
-      // After login, store token we get back in localStorage
-      .then(function (token){
-        console.log("Response from backend: ", token);
-        $window.localStorage.setItem('com.jibe-fb', JSON.stringify(token));
-        $location.path('/home');
-      });
-  };
 
   $scope.fbLogOut = function(){
     fbAuthService.logout();

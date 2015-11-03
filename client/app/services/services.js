@@ -157,28 +157,40 @@ angular.module('jibe.services', [])
         // userId will be used as username
         // split name to get First & Last
       FB.api('/me', { locale: 'en_US', fields: 'name, email, picture'}, function(resp){
-        console.log("RESPONSE --------->", resp);
         newUser['id'] = resp.id;
         newUser['name'] = resp.name;
         newUser['photo'] = resp.picture.data.url;
-      });
-
-      FB.getLoginStatus(function(resp){
-        var token = resp.authResponse.accessToken;
-        newUser['token'] = token;
         deferred.resolve(newUser);
       });
 
       return deferred.promise;
     };
 
+    var getToken = function(newUser){
+        var deferred = $q.defer();
+
+        FB.getLoginStatus(function(resp){
+            var token = resp.authResponse.accessToken;
+            newUser['token'] = token;
+            //console.log("RESPONSE --------->", resp);
+            deferred.resolve(newUser);
+        });
+
+        return deferred.promise;
+
+    }
+
     // login async
     asyncLogin()
       .then(function(){
         // get user info
         asyncGetUserInfo()
+        .then(function(newUser){
+            return getToken(newUser)
+        })
         // post request to our api to save user to db
         .then(function(newUser){
+            //console.log("------> BB: ", newUser);
           return $http
             .post(path, newUser)
             .then(function (resp) {
