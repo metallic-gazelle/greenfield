@@ -6,14 +6,26 @@ module.exports = function(app, passport) {
         res.redirect(301, '/#/host/' + req.playlistId);
     });
 
+
     // =====================================
     // RDIO ROUTES==== =====================
     // =====================================
+    app.param('id', function(req, res, next, id){
+        req.id = id;
+        console.log("FOUND AN ID!!!!! " + id);
+        next();
+    });
+
     // route for rdio authentication and login
-    app.get('/auth/rdio', passport.authenticate('rdio'));
+    app.get('/auth/rdio/:id', function(req, res) {
+
+        console.log( "THERES AN ID HERE ", req.id);
+
+        passport.authenticate('rdio', { state: req.id})(req, res);
+    });
 
     // handle the callback after facebook has authenticated the user
-    app.get('/auth/rdio/callback',
+    app.get('/auth/rdiocallback',
         passport.authenticate('rdio', {
             successRedirect : '/host',
             failureRedirect : '/'

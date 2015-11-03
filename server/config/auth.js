@@ -4,7 +4,7 @@ module.exports = {
     'rdioAuth' : {
         'consumerKey'      : '2dedtdnhuvds3lgoxraqsckege', // your App ID
         'consumerSecret'  : 'x6j5yXrpTt7SyhejdUai0A', // your App Secret
-        'callbackURL'   : 'http://localhost:8080/auth/rdio/callback'
+        'callbackURL'   : 'http://localhost:8080/auth/rdiocallback'
 
     }
 

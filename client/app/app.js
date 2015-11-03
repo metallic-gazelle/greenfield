@@ -3,6 +3,7 @@ var app = angular.module('jibe', [
     'jibe.services',
     'jibe.auth',
     'jibe.host',
+    'jibe.home',
     'ui.select',
     'ui.router'
 ]);
@@ -19,7 +20,8 @@ app.config(function($httpProvider, $stateProvider, $urlRouterProvider) {
     })
     .state('home', {
       templateUrl: 'app/home/home.html',
-      url: '/home'
+      url: '/home',
+      controller: 'HomeCtrl'
     })
     .state('host', {
       templateUrl: 'app/host/host.html',

@@ -12,44 +12,8 @@ module.exports = {
     });
   },
 
-  signup: function (req, res, next) {
-    // Look for fbToken already on request body, store reference if
-    // it exists and delete before passing request body to be saved to dB
-    if (!!req.body.token){
-      var fbToken = req.body.token;
-      delete req.body.token;
-    }
-    // Define displayname and username for attaching to returned FB token obj
-    var displayname = req.body.name['first'];
-    var username = req.body.username;
-
-    User.findOne({username: req.body.username})
-    .exec(function (err, user) {
-      if (!user) {
-        var newUser = new User(req.body);
-        newUser.save(function (err, newUser) {
-          if (err) {
-            next(err);
-          } else {
-              // ***Look for fbToken first, fall back to jwt if not found
-              var token = fbToken || jwt.encode(newUser, 'argleDavidBargleRosson');
-              if (!!fbToken){
-                res.json({token: token, fb: true, username: username, displayname: displayname});
-              } else {
-                res.json({token: token});
-              }
-              console.log('Success: Account added to database.');
-              res.status(201).end();
-            }
-          });
-      } else {
-        res.status(401).end("Error: Account already exists");
-      }
-    });
-  },
-
   login: function (req, res, next) {
-    console.log("--------> REQ BODY: \n", req.body);
+    //console.log("--------> REQ BODY: \n", req.body);
 
     if (!!req.body.token){
       var fbToken = req.body.token;
@@ -60,11 +24,47 @@ module.exports = {
     // If FB token is present, don't try to validate password
     User.findOne({ 'facebook.id': req.body.id })
     .exec(function (err, user) {
+      // if the user doesn't exist in the database, create a document for them
       if (!user) {
-        res.status(401).end("Username Not Found");
+        var newUser = new User({
+          facebook: {
+            id: req.body.id,
+            name: req.body.name,
+            token: fbToken,
+            photo: req.body.photo,
+            email: req.body.email
+          },
+          rdio: {
+            id: null,
+            token: null,
+            name: null,
+            email: null
+          }
+        });
+
+        newUser.save(function(err, user) {
+          if (err) {
+            res.status(401).end("Unable to save user");
+          } else {
+            res.json(201, {
+              token: user.facebook.token,
+              fb: true,
+              id: user.facebook.id,
+              displayname: user.facebook.name
+            });
+          }
+        });
+
       } else {
-        console.log("THIS IS THE USER -----> ", user);
-        res.json(201, {token: fbToken, fb: true, id: req.body.id, displayname: req.body.name});
+        // the user exists in the database, we just need to update the token
+        user.facebook.token = fbToken;
+        //console.log("THIS IS THE USER -----> ", user);
+        res.json(201, {
+          token: fbToken,
+          fb: true,
+          id: req.body.id,
+          displayname: req.body.name
+        });
         //res.status(201).end();
         console.log("Logged In With Facebook");
       }
