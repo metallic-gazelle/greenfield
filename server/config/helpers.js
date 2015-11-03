@@ -1,3 +1,4 @@
+'use strict';
 var jwt  = require('jwt-simple');
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
     console.error(error.stack);
     next(error);
   },
-  errorHandler: function (error, req, res, next) {
+  errorHandler: function (error, req, res) {
     // send error message to client and message for gracefull error handling on app
     res.status(500).send({error: error.message});
   },

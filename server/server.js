@@ -1,7 +1,7 @@
+'use strict';
 var express  = require('express'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    morgan   = require('morgan'),
     configDB = require('./config/database.js');
 
 // connect to mongo database named soundsource

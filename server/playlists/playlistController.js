@@ -1,18 +1,19 @@
+'use strict';
 var Playlist       = require('./playlistModel'),
     Song           = require('../songs/songModel'),
-    SongController = require('../songs/songController'),
     Q              = require('q'),
     sendResp       = require('../config/helpers').sendResponse;
 
 module.exports = {
 
   getPlaylist: function(req, res, next) {
-    console.log('PLAYLIST', req.playlist)
     req.playlist
       .populate('songs')
       .populate('playedSongs')
       .exec(function(err, results) {
-        if (err) next(err);
+        if (err) {
+          next(err);
+        }
         sendResp(res, {playlist: results}); // TODO: send the right data back; inspect these results
       });
   },
@@ -32,7 +33,7 @@ module.exports = {
   findPlaylist: function(req, res, next, playlistId) {
 
     var findOne = Q.nbind(Playlist.findOne, Playlist);
-    var query = {"_id": playlistId};
+    var query = {'_id': playlistId};
 
     findOne(query)
       .then(function(playlist) {
@@ -71,7 +72,7 @@ module.exports = {
       var song = new Song({title: req.body.title, uri: req.body.uri});
       song.save(function(err, song) {
         if (err) {
-          console.log('ERROR')
+          console.log('ERROR');
           next(err);
         } else {
           console.log('SUCCESS: song added to playlist.');
@@ -91,10 +92,12 @@ module.exports = {
       }, function(err) {
         next(err);
       });
-    } else throw new Error('Playlist Error on hasPlayed: song not in playlist.');
+    } else {
+      throw new Error('Playlist Error on hasPlayed: song not in playlist.');
+    }
   },
 
-  removeSong: function(req, res, next) {
+  removeSong: function(req, res) {
     if (req.body.played) {
       req.playlist.playedSongs.push({_id: req.body._id});
     }

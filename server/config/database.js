@@ -1,5 +1,5 @@
 module.exports = {
 
-    'url' : 'mongodb://localhost/jibe'
+    'url': 'mongodb://localhost/jibe'
 
 };

@@ -1,5 +1,5 @@
-var jwt = require('jwt-simple'),
-User = require('./userModel');
+'use strict';
+var User = require('./userModel');
 
 module.exports = {
   findAllUsers: function(req, res) {
@@ -12,12 +12,11 @@ module.exports = {
     });
   },
 
-  login: function (req, res, next) {
-    //console.log("--------> REQ BODY: \n", req.body);
-
+  login: function (req, res) {
+    var displayName, fbToken;
     if (!!req.body.token){
-      var fbToken = req.body.token;
-      var displayname = req.body.name;
+      fbToken = req.body.token;
+      displayName = req.body.name;
       delete req.body.token;
     }
 
@@ -44,13 +43,13 @@ module.exports = {
 
         newUser.save(function(err, user) {
           if (err) {
-            res.status(401).end("Unable to save user");
+            res.status(401).end('Unable to save user');
           } else {
             res.json(201, {
               token: user.facebook.token,
               fb: true,
               id: user.facebook.id,
-              displayname: user.facebook.name
+              displayName: user.facebook.name
             });
           }
         });
@@ -58,15 +57,12 @@ module.exports = {
       } else {
         // the user exists in the database, we just need to update the token
         user.facebook.token = fbToken;
-        //console.log("THIS IS THE USER -----> ", user);
         res.json(201, {
           token: fbToken,
           fb: true,
           id: req.body.id,
-          displayname: req.body.name
+          displayName: req.body.name
         });
-        //res.status(201).end();
-        console.log("Logged In With Facebook");
       }
     });
   }

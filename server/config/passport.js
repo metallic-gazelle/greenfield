@@ -1,9 +1,5 @@
-// load all the things we need
-var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
+'use strict';
 var RdioStrategy = require('passport-rdio-oauth2').Strategy;
-var Q = require('q');
-var jwt = require('jwt-simple');
 
 // load up the user model
 var User = require('../users/userModel');
@@ -40,34 +36,33 @@ module.exports = function(passport) {
 
     // rdio will send back the token and profile
     function(req, token, refreshToken, profile, done) {
-      // asynchronous
 
-        process.nextTick(function() {
+      process.nextTick(function() {
 
-          var facebookId = req.query.state;
+        var facebookId = req.query.state;
 
-          User.findOne({ 'facebook.id': facebookId}, function(err, user){
+        User.findOne({ 'facebook.id': facebookId}, function(err, user){
 
-            if (err) {
-              return done(err);
-            } else {
-              // user found by facebook id, update the rdio info
-              user.rdio.id = profile.id;
-              user.rdio.token = token;
-              user.rdio.name = profile.displayName;
-              user.rdio.email = profile._json.email;
+          if (err) {
+            return done(err);
+          } else {
+            // user found by facebook id, update the rdio info
+            user.rdio.id = profile.id;
+            user.rdio.token = token;
+            user.rdio.name = profile.displayName;
+            user.rdio.email = profile._json.email;
 
-              user.save(function(err) {
-                if (err)
-                  throw err;
-                return done(null, user);
-              });
-            }
-
-
-          });
+            user.save(function(err) {
+              if (err) {
+                throw err;
+              }
+              return done(null, user);
+            });
+          }
 
         });
+
+      });
 
     }));
 
