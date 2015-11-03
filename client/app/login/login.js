@@ -1,3 +1,4 @@
+'use strict';
 var auth = angular.module('jibe.auth', []);
 
 auth.controller('AuthCtrl', function ($scope, $rootScope, $window, $location, fbAuthService, $q) {
@@ -17,8 +18,7 @@ auth.controller('AuthCtrl', function ($scope, $rootScope, $window, $location, fb
     // Return a promise that waits for login process to complete
     var waitForLogin = function() {
       var deferred = $q.defer();
-      fbAuthService.useFacebook('/api/users/login', function(resp){
-        console.log("-------> HERE I AM!!");
+      fbAuthService.useFacebook('/api/users/login', function(resp) {
         deferred.resolve(resp);
       });
       return deferred.promise;
@@ -26,15 +26,14 @@ auth.controller('AuthCtrl', function ($scope, $rootScope, $window, $location, fb
 
     waitForLogin()
       // After login, store token we get back in localStorage
-      .then(function (userObj){
-        console.log("Response from backend: ", userObj);
+      .then(function (userObj) {
         $window.localStorage.setItem('com.jibe-fb', JSON.stringify(userObj));
         $location.path('/home');
       });
   };
 
 
-  $scope.fbLogOut = function(){
+  $scope.fbLogOut = function() {
     fbAuthService.logout();
   };
 

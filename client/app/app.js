@@ -1,3 +1,4 @@
+'use strict';
 var app = angular.module('jibe', [
     'jibe.playlist',
     'jibe.services',
@@ -56,8 +57,7 @@ app.run(function ($rootScope, $location, $window, fbAuthService) {
     FB.init({
       appId      : '1069113223099244',
       channelUrl : 'channel.html',
-      cookie     : true,  // enable cookies to allow the server to access
-                          // the session
+      cookie     : true,  // enable cookies to allow server to access session
       xfbml      : true,  // parse social plugins on this page
       version    : 'v2.4' // use version 2.4
     });
@@ -65,14 +65,16 @@ app.run(function ($rootScope, $location, $window, fbAuthService) {
     // Load Facebook JS SDK
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
+      if (d.getElementById(id)) {
+        return;
+      }
       js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
+      js.src = '//connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
   // Authenticate Changes to URL Path
-  $rootScope.$on('$stateChangeStart', function (evt, next, current) {
+  $rootScope.$on('$stateChangeStart', function () {
     if (!fbAuthService.isAuth()) {
       $location.path('/login');
     }

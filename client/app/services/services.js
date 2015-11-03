@@ -1,3 +1,4 @@
+'use strict';
 angular.module('jibe.services', [])
 
 .factory('searchYouTube', function ($http) {
@@ -6,17 +7,17 @@ angular.module('jibe.services', [])
 
         // Take user submitted search string from input field, split
         // into separate words and rejoin w/ proper delimiter
-        var searchTerms = data.split(" ");
-        var searchQuery = searchTerms.join("+");
+        var searchTerms = data.split(' ');
+        var searchQuery = searchTerms.join('+');
 
         // Base url plus search query start, search query will be added on to this
-        //var base_url = "https://api.spotify.com/v1/search?q=";
+        //var base_url = 'https://api.spotify.com/v1/search?q=';
         // Since we will always be using the same type filter, market filter, and
         // search result limit, can combine all into one suffix url
-        var url_suffix = "&type=track&market=US&limit=20";
+        var urlSuffix = '&type=track&market=US&limit=20';
 
         // Combine base, search, and suffix into complete search query url
-        /*var uri = base_url + searchQuery + url_suffix;*/
+        /*var uri = base_url + searchQuery + urlSuffix;*/
 
         return $http({
                 method: 'GET',
@@ -37,11 +38,11 @@ angular.module('jibe.services', [])
                 // Iterate through search results,
                 _.each(searchResults, function(item) {
                     var entry = {
-                        "title": item.snippet.title,
-                        "uri": item.id.videoId
+                        'title': item.snippet.title,
+                        'uri': item.id.videoId
                     };
-                    _.each(item["artists"], function(artist) {
-                        entry["artists"].push(artist["name"]);
+                    _.each(item.artists, function(artist) {
+                        entry.artists.push(artist.name);
                     });
                     // console.log(entry)
                     results.push(entry);
@@ -157,54 +158,51 @@ angular.module('jibe.services', [])
         // userId will be used as username
         // split name to get First & Last
       FB.api('/me', { locale: 'en_US', fields: 'name, email, picture'}, function(resp){
-        newUser['id'] = resp.id;
-        newUser['name'] = resp.name;
-        newUser['photo'] = resp.picture.data.url;
+        newUser.id = resp.id;
+        newUser.name = resp.name;
+        newUser.photo = resp.picture.data.url;
         deferred.resolve(newUser);
       });
 
       return deferred.promise;
     };
 
-    var getToken = function(newUser){
+    var getToken = function(newUser) {
         var deferred = $q.defer();
 
         FB.getLoginStatus(function(resp){
             var token = resp.authResponse.accessToken;
-            newUser['token'] = token;
-            //console.log("RESPONSE --------->", resp);
+            newUser.token = token;
             deferred.resolve(newUser);
         });
 
         return deferred.promise;
-
-    }
+    };
 
     // login async
     asyncLogin()
-      .then(function(){
+      .then(function() {
         // get user info
         asyncGetUserInfo()
-        .then(function(newUser){
-            return getToken(newUser)
+        .then(function(newUser) {
+            return getToken(newUser);
         })
         // post request to our api to save user to db
-        .then(function(newUser){
+        .then(function(newUser) {
             //console.log("------> BB: ", newUser);
           return $http
             .post(path, newUser)
             .then(function (resp) {
-              console.log("http resp: ", resp);
               cb(resp.data);
               return resp.data;
             });
-        })
+        });
       });
 
   };
 
   // Allow the user to logout of FBook from our site?
-  fbAuthService.logout = function(){
+  fbAuthService.logout = function() {
     FB.logout(function(response) {
       console.log(response);
     });
