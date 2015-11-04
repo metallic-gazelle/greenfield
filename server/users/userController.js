@@ -1,4 +1,7 @@
 'use strict';
+
+var jwt = require('jwt-simple');
+var Rdio = require('rdio');
 var User = require('./userModel');
 
 module.exports = {
@@ -36,6 +39,7 @@ module.exports = {
           rdio: {
             id: null,
             token: null,
+            refreshToken: null,
             name: null,
             email: null
           }
@@ -65,6 +69,73 @@ module.exports = {
         });
       }
     });
+  },
+
+  getRdioTokens: function(req, res, next){
+
+    var facebookId = req.params.facebookId;
+
+    User.findOne({'facebook.id': facebookId})
+    .exec(function(err, user){
+      if (err) { throw err;}
+      else {
+        res.json(200, {
+          accessToken: user.rdio.token,
+          refreshToken: user.rdio.refreshToken
+        });
+      }
+    })
+  },
+
+  getQueryResults: function(req, res, next){
+
+    var facebookId = req.params.facebookId;
+    var queryString = req.params.queryString;
+
+    User.findOne({'facebook.id': facebookId})
+    .exec(function(err, user){
+      if (err) { throw err;}
+      else {
+
+        var credentials = {
+          accessToken: user.rdio.token,
+          refreshToken: user.rdio.refreshToken
+        };
+        console.log("CREDENTIALS -------> ", credentials);
+        res.json(200, credentials);
+
+        /*var rdio = new Rdio(
+          {
+            urls: {
+              auth: 'https://www.rdio.com/oauth2/authorize',
+              token: 'https://services.rdio.com/oauth2/token',
+              resource: 'https://services.rdio.com/api/1/'
+            },
+            rdio: {
+              clientId: "2dedtdnhuvds3lgoxraqsckege",
+              clientSecret: "x6j5yXrpTt7SyhejdUai0A"
+            }
+          });
+
+        console.log
+
+        rdio.request({
+          method: 'search',
+          query: 'diplo',
+          start: 0,
+          count: 20,
+          types: 'Track'
+        }, function(err, response) {
+          if (err) {
+            res.json(404, "Problem!")
+          }
+
+          res.json(200, response);
+
+        });*/
+
+      }
+    })
   }
 
 };

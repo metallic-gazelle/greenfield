@@ -1,6 +1,36 @@
 'use strict';
 angular.module('jibe.services', [])
 
+.factory('rdioService', function ($window, $http){
+
+    var getRdioTokens = function(){
+
+        // first get the facbook id
+        var facebookId = JSON.parse($window.localStorage.getItem('com.jibe-fb')).id;
+
+        // lookup user data by facebook id
+        return $http({
+            method: 'GET',
+            url: "api/users/rdiotokens/"+ facebookId
+        });
+    }
+
+    var getQueryResults = function(query){
+        var facebookId = JSON.parse($window.localStorage.getItem('com.jibe-fb')).id;
+
+        return $http({
+            method: 'GET',
+            url: "/api/users/rdioquery/"+facebookId+"/"+query
+        });
+
+    }
+
+    return {
+        getRdioTokens: getRdioTokens,
+        getQueryResults: getQueryResults
+    }
+
+})
 .factory('searchYouTube', function ($http) {
     // this is our factory function for getting data from spotify, this will be run when we type in the search field
     var getData = function(data) {

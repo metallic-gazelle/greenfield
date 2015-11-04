@@ -7,18 +7,19 @@ var Schema = mongoose.Schema;
 //===========================
 var userSchema = new Schema({
   facebook: {
-    id         : String,
-    token      : String,
-    name       : String,
-    email      : String,
-    photo      : String
+      id            : String,
+      token         : String,
+      name          : String,
+      email         : String,
+      photo         : String
   },
   rdio: {
-    id         : String,
-    token      : String,
-    name       : String,
-    email      : String,
-    photo      : String
+      id            : String,
+      token         : String,
+      refreshToken  : String,
+      name          : String,
+      email         : String,
+      photo         : String
   },
   updatedAt: {
     type: Date

@@ -10,8 +10,19 @@ angular.module('jibe.playlist', ['jibe.services'])
   ]);
 }])
 
-.controller('PlaylistCtrl', function PlaylistCtrl($scope, $window, $location, searchYouTube, playlistDatabase, songDatabase) {
+.controller('PlaylistCtrl', function PlaylistCtrl($scope, $window, $location, searchYouTube, playlistDatabase, songDatabase, rdioService) {
 
+  // get the rdio tokens and save them to local storage
+  rdioService.getRdioTokens().then(
+    function(resp){
+      console.log("TOKENS -----> ", resp.data);
+      $window.localStorage.setItem('com.jibe-rdio', JSON.stringify(resp.data));
+    });
+
+  rdioService.getQueryResults("diplo").then(
+    function(resp){
+      console.log("RESPONSE -----> ", resp.data);
+    });
   // search functionality
   $scope.modalShown = false;
   $scope.toggleModal = function() {

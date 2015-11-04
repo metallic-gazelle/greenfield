@@ -12,7 +12,6 @@ module.exports = function(passport) {
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
       done(null, user._id);
-
     });
 
     // used to deserialize the user
@@ -46,21 +45,22 @@ module.exports = function(passport) {
           if (err) {
             return done(err);
           } else {
-            // user found by facebook id, update the rdio info
-            user.rdio.id = profile.id;
-            user.rdio.token = token;
-            user.rdio.name = profile.displayName;
-            user.rdio.email = profile._json.email;
+              // user found by facebook id, update the rdio info
+              user.rdio.id = profile.id;
+              user.rdio.token = token;
+              user.rdio.refreshToken = refreshToken;
+              user.rdio.name = profile.displayName;
+              user.rdio.email = profile._json.email;
 
-            user.save(function(err) {
-              if (err) {
-                throw err;
-              }
-              return done(null, user);
-            });
-          }
+              user.save(function(err) {
+                if (err) {
+                  throw err;
+                }
+                return done(null, user);
+              });
+            }
 
-        });
+          });
 
       });
 

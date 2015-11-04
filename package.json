@@ -34,21 +34,22 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.4.3",
-    "connect-flash" : "~0.1.1",
+    "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.0.0",
+    "ejs": "~0.8.5",
     "express": "^4.4.5",
     "express-session": "~1.0.0",
     "jwt-simple": "^0.3.0",
+    "method-override": "~1.0.0",
     "mongoose": "^4.1",
     "morgan": "^1.1.1",
     "passport": "0.2.2",
+    "passport-facebook": "^2.0.0",
     "passport-oauth": "^1.0.0",
+    "passport-rdio": "latest",
     "passport-rdio-oauth2": "^1.1.1",
-    "passport-facebook" : "^2.0.0",
-    "passport-rdio" : "latest",
-    "cookie-parser": "~1.0.0",
-    "method-override": "~1.0.0",
     "q": "^1.0.1",
-    "ejs" : "~0.8.5",
+    "rdio": "^3.1.0",
     "shortid": "^2.2.2"
   }
 }
