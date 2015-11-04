@@ -1,4 +1,3 @@
-'use strict';
 var app = angular.module('jibe', [
     'jibe.playlist',
     'jibe.services',

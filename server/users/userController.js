@@ -1,7 +1,15 @@
 'use strict';
 
 var jwt = require('jwt-simple');
-var Rdio = require('rdio');
+var configAuth = require('../config/auth');
+
+var Rdio = require('rdio')({
+  rdio: {
+    clientId: configAuth.rdioAuth.consumerKey,
+    clientSecret: configAuth.rdioAuth.consumerSecret
+  }
+});
+
 var User = require('./userModel');
 
 module.exports = {
@@ -91,51 +99,30 @@ module.exports = {
 
     var facebookId = req.params.facebookId;
     var queryString = req.params.queryString;
+    var queryResults = [];
 
     User.findOne({'facebook.id': facebookId})
     .exec(function(err, user){
       if (err) { throw err;}
       else {
-
         var credentials = {
           accessToken: user.rdio.token,
           refreshToken: user.rdio.refreshToken
         };
         console.log("CREDENTIALS -------> ", credentials);
-        res.json(200, credentials);
+        //res.json(200, credentials);
 
-        /*var rdio = new Rdio(
-          {
-            urls: {
-              auth: 'https://www.rdio.com/oauth2/authorize',
-              token: 'https://services.rdio.com/oauth2/token',
-              resource: 'https://services.rdio.com/api/1/'
-            },
-            rdio: {
-              clientId: "2dedtdnhuvds3lgoxraqsckege",
-              clientSecret: "x6j5yXrpTt7SyhejdUai0A"
-            }
-          });
+        var rdio = new Rdio(credentials,{});
 
-        console.log
-
-        rdio.request({
-          method: 'search',
-          query: 'diplo',
-          start: 0,
-          count: 20,
-          types: 'Track'
-        }, function(err, response) {
-          if (err) {
-            res.json(404, "Problem!")
-          }
-
-          res.json(200, response);
-
-        });*/
+        rdio.request({method: 'search', query: 'diplo', start: 0, count: 20, types: 'Track'},
+          function(err, results) {
+            if (err) { res.status(404).json("Error"); }
+            console.log(results.result.results);
+            res.status(201).json({results: results});
+            });
 
       }
-    })
+    });
   }
 
 };

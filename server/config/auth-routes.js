@@ -1,4 +1,4 @@
-'use strict';
+
 var PlaylistCtrl = require('../playlists/playlistController');
 var helpers = require('./helpers');
 
