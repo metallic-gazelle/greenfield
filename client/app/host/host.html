@@ -4,22 +4,22 @@
         <i class="fa fa-minus"></i>
     </a>
 
-   <div id="source-name">YouTube</div>
+   <div id="source-name">NOMINATE</div>
 
    <div id="search-form">
 
-       <input type="text" class="input_text light" placeholder="Search Now" ng-model='searchInput' ng-change="getSongs(searchInput)">
+       <input type="text" class="input_text light" placeholder="Search Now" ng-model='searchInput' ng-change="getRdioTracks(searchInput)">
 
-       <input type="submit" class="input_submit dark-button black" value="GO" ng-click="getSongs(searchInput)">
+       <input type="submit" class="input_submit dark-button black" value="GO" ng-click="getRdioTracks(searchInput)">
    </div>
 
    <div class="overlay-content">
-       <div class="song-container clearfix" ng-show="searchInput!== ''" ng-repeat="result in results |limitTo:20" refresh="getSongs($select.search)" refresh-delay="0">
-           <img class="small-artwork" src="http://i1.ytimg.com/vi/{{result.uri}}/1.jpg ">
+       <div class="song-container clearfix" ng-show="searchInput!== ''" ng-repeat="result in results |limitTo:20" refresh="getRdioTracks($select.search)" refresh-delay="0">
+           <img class="small-artwork" src="{{result.photo}} ">
            <div class="song-info">
 
-               <div class="song-name light medium">{{ result.title }}</div>
-               <!-- <div class="artist-name light small">Beyonce and the super groovy chicks</div> -->
+               <div class="song-name light medium">{{ result.name }}</div>
+               <div class="artist-name light small">{{ result.artist }}</div>
            </div>
            <a href="" class="add-button dark-button black">
                Add

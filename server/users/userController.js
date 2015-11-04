@@ -109,15 +109,15 @@ module.exports = {
           accessToken: user.rdio.token,
           refreshToken: user.rdio.refreshToken
         };
-        console.log("CREDENTIALS -------> ", credentials);
+        //console.log("CREDENTIALS -------> ", credentials);
         //res.json(200, credentials);
 
         var rdio = new Rdio(credentials,{});
 
-        rdio.request({method: 'search', query: 'diplo', start: 0, count: 20, types: 'Track'},
+        rdio.request({method: 'search', query: queryString, start: 0, count: 20, types: 'Track'},
           function(err, results) {
             if (err) { res.status(404).json("Error"); }
-            console.log(results.result.results);
+            //console.log(results.result.results);
             res.status(201).json({results: results});
             });
 

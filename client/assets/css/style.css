@@ -385,8 +385,8 @@ body {
 
 .gradient{
     margin: 10px 0px 0px 0px;
-    height:31px;
-    padding-top: 5px;
+    height:38px;
+    /*padding-top: 5px;*/
     padding-bottom: 13px;
     background-image:
     linear-gradient(
@@ -394,6 +394,10 @@ body {
       #DA6771 ,
       #BBD099
     );
+}
+
+i.fa {
+    line-height: 38px;
 }
 
 .downvotes {

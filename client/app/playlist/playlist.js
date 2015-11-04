@@ -15,14 +15,10 @@ angular.module('jibe.playlist', ['jibe.services'])
   // get the rdio tokens and save them to local storage
   rdioService.getRdioTokens().then(
     function(resp){
-      console.log("TOKENS -----> ", resp.data);
+      //console.log("TOKENS -----> ", resp.data);
       $window.localStorage.setItem('com.jibe-rdio', JSON.stringify(resp.data));
     });
 
-  rdioService.getQueryResults("diplo").then(
-    function(resp){
-      console.log("RESPONSE -----> ", resp.data);
-    });
   // search functionality
   $scope.modalShown = false;
   $scope.toggleModal = function() {
@@ -36,14 +32,36 @@ angular.module('jibe.playlist', ['jibe.services'])
 
   $scope.searchInput = '';
 
-  $scope.getSongs = function(reqString) {
-    searchYouTube.getData(reqString).then(function(data) {
-      console.log(data);
+  $scope.getRdioTracks = function(reqString) {
+
+    if(reqString.length){
+      rdioService.getQueryResults(reqString).then(function(results){
+        var tracks = results.data.results.result.results;
+        //console.log("DATA---->", tracks);
+
+        $scope.results = tracks.map(function(item){
+          return {
+            name: item.name,
+            artist: item.artist,
+            photo: item.icon,
+            uri: item.url
+          }
+        });
+      }).catch(function(err){
+        console.log(err);
+      });
+
+    }
+
+
+
+    /*searchYouTube.getData(reqString).then(function(data) {
+      console.log("DATA---->", data);
       $scope.results = data;
     })
     .catch(function(err) {
       console.error(err);
-    });
+    });*/
   };
 
   // the data will also need to be added to the db
