@@ -170,24 +170,25 @@
 </div>
 
 <script>
+'use strict';
 $(document).ready(function () {
 
-    $("#share-open").click(function(event){
+    $('#share-open').click(function(event){
         event.preventDefault();
         $('#overlay-share').css('visibility','visible');
     });
 
-    $("#share-close").click(function(event){
+    $('#share-close').click(function(event){
         event.preventDefault();
         $('#overlay-share').css('visibility','hidden');
     });
 
-    $("#search-open").click(function(event){
+    $('#search-open').click(function(event){
         event.preventDefault();
         $('#overlay-source-search').css('visibility','visible');
     });
 
-    $("#search-close").click(function(event){
+    $('#search-close').click(function(event){
         event.preventDefault();
         $('#overlay-source-search').css('visibility','hidden');
     });
@@ -202,9 +203,9 @@ $(document).ready(function () {
                 return rex.test($(this).text());
             }).show();
 
-        })
+        });
 
-    }(jQuery));
+    }($));
 
 });
 </script>

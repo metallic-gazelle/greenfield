@@ -1,3 +1,4 @@
+'use strict';
 var Song     = require('./songModel'),
     Q        = require('q'),
     sendResp = require('../config/helpers').sendResponse;
@@ -32,7 +33,7 @@ module.exports = {
 
     var findOne = Q.nbind(Song.findOne, Song);
 
-    var query = {"_id": songId};
+    var query = {'_id': songId};
 
     findOne(query)
       .then(function(song) {
@@ -62,7 +63,7 @@ module.exports = {
 
     var findOne = Q.nbind(Song.findOne, Song);
 
-    var query = {"_id": songId};
+    var query = {'_id': songId};
 
     findOne(query)
       .then(function(song) {

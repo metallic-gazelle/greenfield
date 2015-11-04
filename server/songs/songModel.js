@@ -1,5 +1,5 @@
-var mongoose = require('mongoose'),
-    Q        = require('q');
+'use strict';
+var mongoose = require('mongoose');
 
 // NOTE ABOUT DATABASE SCHEMA
 // _id (ObjectId) is included as default for all Schema
@@ -24,7 +24,7 @@ var SongSchema = new Schema({
     downvotes:  Number,
     downvoteUsers: [{type: Schema.Types.ObjectId, ref: 'User'}] // references User _id
   },
-  updated_at: { type: Date },
+  updatedAt: { type: Date },
   played: {
     type: Boolean,
     default: false
@@ -41,9 +41,9 @@ SongSchema.methods.downvote = function() {
   return this.save();
 };
 
-// revise the updated_at field before saving each entry
+// revise the updatedAt field before saving each entry
 SongSchema.pre('save', function(next) {
-  this.updated_at = new Date();
+  this.updatedAt = new Date();
   next();
 });
 

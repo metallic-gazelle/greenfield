@@ -1,3 +1,4 @@
+'use strict';
 var morgan        = require('morgan'), // used for logging incoming request
     bodyParser    = require('body-parser'),
     helpers       = require('./helpers'),

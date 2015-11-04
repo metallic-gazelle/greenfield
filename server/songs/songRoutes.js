@@ -1,3 +1,4 @@
+'use strict';
 var songController = require('./songController');
 
 module.exports = function (app) {

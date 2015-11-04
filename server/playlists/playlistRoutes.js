@@ -1,3 +1,4 @@
+'use strict';
 var playlistController = require('./playlistController');
 
 module.exports = function (app) {

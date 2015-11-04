@@ -1,3 +1,4 @@
+'use strict';
 angular.module('jibe.playlist', ['jibe.services'])
 
 .config(['$sceDelegateProvider', function ($sceDelegateProvider) {
@@ -22,7 +23,7 @@ angular.module('jibe.playlist', ['jibe.services'])
   $scope.results = [];
   $scope.result = [];
 
-  $scope.searchInput = "";
+  $scope.searchInput = '';
 
   $scope.getSongs = function(reqString) {
     searchYouTube.getData(reqString).then(function(data) {
@@ -40,9 +41,9 @@ angular.module('jibe.playlist', ['jibe.services'])
 
 
   $scope.playList = [{
-      title: "Katy Perry - Unconditionally (Official)",
-      uri: "XjwZAa2EjKA",
-      $$hashKey: "object:22",
+      title: 'Katy Perry - Unconditionally (Official)',
+      uri: 'XjwZAa2EjKA',
+      $$hashKey: 'object:22',
       votes: 0,
       id: '12345'
   }];
@@ -86,17 +87,17 @@ angular.module('jibe.playlist', ['jibe.services'])
         artist: 'Janet Jackson featuring Susan Sarandon',
         upvotes: 101,
         downvotes: 35,
-        artwork: "assets/img/now-playing-img.jpg"
+        artwork: 'assets/img/now-playing-img.jpg'
     };
 
     $scope.queue = [
         {
-            name: "Haunted",
-            artist: "Beyonce",
+            name: 'Haunted',
+            artist: 'Beyonce',
             upvotes: 14,
             downvotes: 80,
-            artwork: "assets/img/now-playing-img.jpg",
-            nominatedBy: "Susan Sarandon",
+            artwork: 'assets/img/now-playing-img.jpg',
+            nominatedBy: 'Susan Sarandon',
             isCollapsed: true,
             upvoters:[
                 {
@@ -152,12 +153,12 @@ angular.module('jibe.playlist', ['jibe.services'])
             ]
         },
         {
-            name: "Hang With Me",
-            artist: "Robyn",
+            name: 'Hang With Me',
+            artist: 'Robyn',
             upvotes: 20,
             downvotes: 300,
-            artwork: "assets/img/expanded-artwork-img.jpg",
-            nominatedBy: "Ben Biran",
+            artwork: 'assets/img/expanded-artwork-img.jpg',
+            nominatedBy: 'Ben Biran',
             isCollapsed: true,
             upvoters:[],
             downvoters:[]
@@ -183,14 +184,16 @@ angular.module('jibe.playlist', ['jibe.services'])
     transclude: true, // we want to insert custom content inside the directive
     link: function(scope, element, attrs) {
       scope.dialogStyle = {};
-      if (attrs.width)
+      if (attrs.width) {
         scope.dialogStyle.width = attrs.width;
-      if (attrs.height)
+      }
+      if (attrs.height) {
         scope.dialogStyle.height = attrs.height;
+      }
       scope.hideModal = function() {
         scope.show = false;
       };
     },
-    template: "<div class='ng-modal' ng-show='show'><div class='ng-modal-overlay' ng-click='hideModal()'></div><div class='ng-modal-dialog' ng-style='dialogStyle'><div class='ng-modal-close' ng-click='hideModal()'>X</div><div class='ng-modal-dialog-content' ng-transclude></div></div></div>"
+    template: '<div class="ng-modal" ng-show="show"><div class="ng-modal-overlay" ng-click="hideModal()"></div><div class="ng-modal-dialog" ng-style="dialogStyle"><div class="ng-modal-close" ng-click="hideModal()">X</div><div class="ng-modal-dialog-content" ng-transclude></div></div></div>'
   };
 });
